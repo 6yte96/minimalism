@@ -2,6 +2,10 @@
 
 This guide outlines the core design tokens, typographic hierarchy, component guidelines, and implementation patterns behind the **Paper & Ink Broadsheet Design System**.
 
+> For what to write on the page (not how it looks), read
+> [`CONTENT_RULES.md`](./CONTENT_RULES.md). Design tokens live here;
+> content discipline lives there.
+
 ---
 
 ## 1. Design Philosophy
@@ -62,11 +66,9 @@ The Broadsheet design system rejects generic SaaS templates (gradients, bubble b
 
   <!-- Content -->
   <div class="card-content postcard-content">
-    <h3 class="card-title postcard-title">
-      <a href="...">Feature or Capability Title</a>
-    </h3>
+    <h3 class="card-title postcard-title">Feature or Capability Title</h3>
     <p class="card-excerpt postcard-excerpt">
-      By @handle — Concise technical description explaining the architectural advantage.
+      Concise technical description in plain language. No byline.
     </p>
   </div>
 
@@ -75,32 +77,27 @@ The Broadsheet design system rejects generic SaaS templates (gradients, bubble b
     <div class="postcard-footer-copy">
       <a href="..." class="postcard-repo-link">
         <span aria-hidden="true">↳</span>
-        <span>github.com/org/repo</span>
+        <span>src/file.ts</span>
       </a>
-      <div className="postcard-meta-line">
-        <span>@handle</span>
-        <span>·</span>
-        <span>340★</span>
-        <span>·</span>
-        <time>2026 EDITION</time>
+      <div class="postcard-meta-line">
+        <span>one short real fact, e.g. node 18+</span>
       </div>
     </div>
 
-    <!-- Actions & Physical Stamp -->
+    <!-- The tilted corner stamp carries a real number -->
     <div class="postcard-actions">
-      <div class="bookmark-container text-bookmark postcard-bookmark">
-        <button class="bookmark-btn">
-          <i class="far fa-bookmark"></i>
-        </button>
-      </div>
-      <div class="postcard-impressions-stamp" title="3,420 impressions">
-        <span>Impressions</span>
-        <strong>3,420</strong>
+      <div class="postcard-impressions-stamp" title="Label: value">
+        <span>STAMP LABEL</span>
+        <strong>165</strong>
       </div>
     </div>
   </div>
 </article>
 ```
+
+Card rules (see CONTENT_RULES.md): no bookmark buttons, no impression
+counters, no star bylines. The stamp is a real number, the meta line is
+a real fact, the repo link deep-links to source.
 
 ### 2. Bento Grid Cage
 
@@ -158,7 +155,7 @@ CSS backing:
 
 ```html
 <div class="press-run-card">
-  <div class="press-run-label">Press run</div>
+  <div class="press-run-label">Telemetry run</div>
   <div class="press-stat">
     <span class="press-stat-number">2.8M</span>
     <span class="press-stat-label">Monthly Computes</span>
@@ -168,7 +165,27 @@ CSS backing:
     <span class="press-stat-label">IPC Round-Trip</span>
   </div>
 </div>
-<div class="press-run-update">Updated 04:12 UTC · auto</div>
+<div class="press-run-update">Verified against src/registry.rs, v1.4.0</div>
+```
+
+### 5. Support Card (end of page)
+
+Full-row postcard with horizontal rules only. On hover, 35px vertical
+crop ticks grow from both ends of both rules. Quiet star and sponsor
+icons also live under the hero telemetry card.
+
+```html
+<article class="project-card postcard-card support-card">
+  <div class="postcard-topline">
+    <span class="postcard-tag boxed tilt-up">SUPPORT</span>
+  </div>
+  <h3 class="postcard-title support-title">Keep the Project Open</h3>
+  <p class="postcard-excerpt support-excerpt">...</p>
+  <div class="card-footer postcard-footer support-footer">
+    <!-- repo link, meta line, LICENSE stamp -->
+    <!-- buttons: Star (primary), Share, Sponsor (optional) -->
+  </div>
+</article>
 ```
 
 ---
@@ -185,9 +202,10 @@ Open `project.config.ts` and add an object to `features`:
   tech: "RUST / ARENA",
   title: "Arena Memory Allocation",
   description: "Bulk allocates memory chunks to eliminate allocator lock contention during high throughput streaming.",
-  repoLinkText: "org/repo-alloc",
-  impressions: "4,120",
-  stars: "185★",
+  repoLinkText: "src/alloc/chunks.rs",
+  repoHref: "https://github.com/org/repo/blob/main/src/alloc/chunks.rs",
+  stamp: { label: "ALLOCATIONS", value: "0" },
+  meta: "lock-free hot path",
   tilt: "tilt-up", // 'tilt-up' | 'tilt-down'
 }
 ```
