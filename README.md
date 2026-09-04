@@ -1,163 +1,120 @@
 # Broadsheet Open-Source Project Landing Page Template
 
-An editorial, broadsheet brutalist landing page template engineered specifically for open-source repositories, developer tools, agent frameworks, and distributed systems.
+An editorial, broadsheet brutalist landing page template for open-source
+repositories, developer tools, agent frameworks, and distributed systems.
 
-Built with **Next.js 15 (App Router)**, **TypeScript**, **Font Awesome**, and the authentic **2026 Paper & Ink Broadsheet Design System**.
+Built with **Next.js 15 (App Router)**, **TypeScript**, and the
+**Paper & Ink Broadsheet Design System**. Exports as a static site ready
+for **GitHub Pages**.
+
+> **Writing content?** Read [`CONTENT_RULES.md`](./CONTENT_RULES.md)
+> first. It is the difference between a page that reads like a person
+> shipped it and one that reads like filler.
 
 ---
 
-## ⚡ 60-Second Quickstart
+## 60-Second Quickstart
 
 ```bash
-# 1. Clone or copy into your new project directory
-cp -r broadsheet-project-template my-new-project-landing
-cd my-new-project-landing
-
-# 2. Install dependencies
+cp -r broadsheet-project-template my-project-landing
+cd my-project-landing
 bun install
-# or: npm install
-
-# 3. Start local development server
 bun dev
-# or: npm run dev
 ```
 
-Visit `http://localhost:3000` to view your landing page.
+Visit `http://localhost:3000/yourproject` (basePath is set for GitHub
+Pages project sites).
+
+## Deploy to GitHub Pages
+
+1. Copy `.github/workflows/` style deploy: build with `bun run build`,
+   upload `out/` with `actions/upload-pages-artifact`, deploy with
+   `actions/deploy-pages`.
+2. Set `basePath` in `next.config.ts` to `/<repo-name>`.
+3. In the repo: Settings, Pages, Build and deployment, Source:
+   **GitHub Actions**.
+
+For a custom domain, set `NEXT_PUBLIC_BASE_PATH=""`.
 
 ---
 
-## 🎯 5-Minute Customization: `project.config.ts`
+## Customization: `project.config.ts`
 
-You do **not** need to touch complex React code to customize this landing page. Simply open [`project.config.ts`](./project.config.ts) and edit the single configuration object:
+All page content lives in **one file**. The interface is the
+documentation, and the shipped example follows every content rule.
 
 ```typescript
 export const PROJECT_CONFIG = {
-  meta: {
-    title: "YourProject — High-Performance Distributed Task Orchestrator",
-    description: "Brief summary of what makes your tool indispensable.",
-    keywords: ["open-source", "rust", "typescript", "cli"],
-    url: "https://yourproject.dev",
-    author: "Your Org / Name",
-  },
-  brand: {
-    name: "yourproject",
-    domainSuffix: ".dev",
-    tagline: "A broadsheet for software that doesn't ask for your email",
-    handle: "yourgithubhandle",
-  },
+  meta: { title, description, keywords, url, author, version },
+  brand: { name, domainSuffix, tagline, handle },
+  // nav: 4 items max, each id matches a section id. GitHub is added automatically.
+  nav: [{ id: "playground", label: "Session" }, ...],
   hero: {
-    issueBadge: "Issue latest",
-    edition: "Edition 2026-A",
-    titleLines: {
-      before: "High-Performance",
-      highlight: "Zero-Overhead",   // Rendered in solid inverted highlight box
-      after: "State Engine",
-    },
-    description: "Clear, punchy technical description of your project.",
-    primaryCta: { text: "Explore Architecture", href: "#architecture" },
-    secondaryCta: { text: "GitHub Repository", href: "https://github.com/org/repo" },
+    issueBadge: "v1.4.0",        // version, the only metadata worth showing
+    titleLines: { before, highlight, after },
+    description, primaryCta, secondaryCta,
   },
-  install: {
-    defaultManager: "npm",
-    managers: {
-      npm: "npm install yourproject",
-      pnpm: "pnpm add yourproject",
-      bun: "bun add yourproject",
-      cargo: "cargo add yourproject-core",
-      pip: "pip install yourproject-engine",
-    },
-  },
-  telemetry: {
-    label: "Telemetry run",
-    updatedText: "Updated 04:12 UTC · auto",
-    stats: [
-      { number: "2.8M", label: "Monthly Computes" },
-      { number: "<12µs", label: "IPC Round-Trip" },
-      { number: "0.00%", label: "Allocation Overhead" },
-    ],
-  },
-  features: [
-    // Array of features rendered on the 1px brutalist rule cage
-  ],
-  codePlayground: {
-    // Multi-tab interactive code window (TypeScript, Rust, Python, Go, etc.)
-  },
-  benchmarks: {
-    // Performance table comparing your tool with alternatives
-  },
-  architecture: {
-    // Multi-layer technical protocol specs
-  },
-  changelog: [
-    // Recent release dispatches
-  ],
-  links: {
-    github: "https://github.com/org/repo",
-    docs: "https://docs.yourproject.dev",
-    discord: "https://discord.gg/yourproject",
-  },
+  install: { defaultManager, managers: { npm: "...", pnpm: "..." } },
+  telemetry: { label, updatedText, stats: [{ number, label }] },  // real numbers only
+  features: [{
+    id, bentoClass, category, tech, title, description,
+    repoLinkText, repoHref,       // deep link to the real source file
+    stamp: { label, value },      // tilted corner stamp, real number
+    meta: "node 18+",             // one short real fact
+    tilt: "tilt-up",
+  }],
+  codePlayground: { title, tabs: [{ id, label, filename, code }] },
+  benchmarks: { title, subtitle, headers, rows },
+  architecture: { title, subtitle, layers: [{ tag: "LAYER 0", name, role }] },
+  support: { heading, text, license, year, starLabel, sponsorLabel, shareTitle },
+  community: { contributingText, dispatches: [{ title, tag, component, href }] },
+  links: { github, docs, npm, sponsor },
 };
 ```
 
----
+### Section order (follow the reader's questions)
 
-## 🏛 Architectural Principles
-
-1. **Broadsheet Layout**: Modeled after traditional newspapers, broadsheets, and editorial journals with high-contrast typography, crisp 1px rule lines, and structured telemetry cards.
-2. **Paper & Ink Color System**:
-   * Light mode: `#F2F8FC` paper background with `#000000` ink rules and surface tones (`#e3eef5`).
-   * Dark mode: `#24221f` parchment background with `#F2F8FC` ink rules and `#302d28` surfaces.
-3. **Typography**:
-   * **Sans Stack**: `Rubik` for body copy, paragraphs, and descriptions.
-   * **Mono Stack**: `Space Mono` for mastheads, headlines, cards, stamps, numbers, and tags.
-4. **Bento Rule Cage**:
-   * Grid elements are separated by `1px` rule lines formed by a solid rule container with `1px` gap.
-   * Zero bubble borders or blurry card shadows.
-5. **Postcard Cards**:
-   * Tilted boxed category tags (`tilt-up` at `-2deg` / `tilt-down` at `2deg`).
-   * Mono title links with hover underline.
-   * Branch copy (`↳ org/repo`).
-   * Tilted `-3deg` `IMPRESSIONS` stamp.
+| Section | Answers |
+|---------|---------|
+| Hero | What is it, how do I run it |
+| Playground | What happens when I run it |
+| Features | What it does (searchable, like the tool) |
+| Benchmarks | Why this one (real data only) |
+| Architecture | How it works inside, how to contribute |
+| Support | Star, share, sponsor |
 
 ---
 
-## 📦 Component Overview
+## What ships in the box
 
-| Component | Description |
-|-----------|-------------|
-| [`Header`](./src/components/Header.tsx) | Centered masthead, Space Mono brand link, nav tabs, drawer, and theme toggle |
-| [`Hero`](./src/components/Hero.tsx) | `Issue latest` badge, inverted headline box, multi-manager install tabs, telemetry box |
-| [`FeatureBento`](./src/components/FeatureBento.tsx) | 1px rule broadsheet grid with search grep bar and category filter buttons |
-| [`Playground`](./src/components/Playground.tsx) | Monospace code window (`● ● ●`) with multi-language tabs and copy function |
-| [`Benchmarks`](./src/components/Benchmarks.tsx) | Ruled broadsheet benchmark table highlighting latency, throughput, and memory |
-| [`Architecture`](./src/components/Architecture.tsx) | Deep-dive protocol layers with corner brackets and specifications |
-| [`Changelog`](./src/components/Changelog.tsx) | Chronological release dispatch ledger with version tags |
-| [`Community`](./src/components/Community.tsx) | Contributing guidelines, Good First Issues cards, and open discussions |
-| [`Footer`](./src/components/Footer.tsx) | Editorial broadsheet footer with version, legal/license, and transmissions |
-| [`ThemeToggle`](./src/components/ThemeToggle.tsx) | Instant Day / Night toggle with persistent local storage |
+**Design**: 1px rule cages, Space Mono headlines, Rubik body text,
+tilted boxed stamps, paper grain, dark night edition with toggle.
+
+**Frontend quality (do not remove while customizing)**:
+
+- Responsive 320px to 1920px, no horizontal overflow
+- Anchor jumps clear the collapsing sticky header
+- Scroll-spy nav highlighting
+- `:focus-visible` rings, `prefers-reduced-motion` support
+- Safe-area insets for notched phones, touch press feedback
+- Mobile drawer with scroll-lock and Escape handling
+- Print stylesheet, static export with base path for project pages
+
+**Removed from earlier template versions** (by design, see
+CONTENT_RULES.md): Section/Pp./Folio chrome, changelog and community
+boilerplate sections, sponsor-page.css (23KB), bookmark buttons,
+impression counters, star bylines.
 
 ---
 
-## 🚀 Deployment
-
-### Deploy to Vercel
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
+## Commands
 
 ```bash
-vercel
+bun dev           # local dev
+bun run build     # static export to out/
+bun run type-check
 ```
 
-### Deploy with Docker
-```dockerfile
-FROM node:22-alpine AS runner
-WORKDIR /app
-COPY . .
-RUN npm install && npm run build
-EXPOSE 3000
-CMD ["npm", "start"]
-```
+## License
 
----
-
-## 📄 License
-Distributed under the MIT License. Built for the open-source developer ecosystem.
+MIT

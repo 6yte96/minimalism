@@ -5,14 +5,13 @@ import Link from "next/link";
 import { PROJECT_CONFIG } from "@/config";
 import { ThemeToggle } from "./ThemeToggle";
 
-interface HeaderProps {
-  currentSection?: string;
-}
-
-export function Header({ currentSection = "home" }: HeaderProps) {
+export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const { brand, links } = PROJECT_CONFIG;
+  const [activeSection, setActiveSection] = useState<string>(
+    PROJECT_CONFIG.nav[0]?.id ?? ""
+  );
+  const { brand, links, nav } = PROJECT_CONFIG;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,6 +20,40 @@ export function Header({ currentSection = "home" }: HeaderProps) {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    // Scroll-spy: highlight the nav item for the section in view
+    const ids = nav.map((i) => i.id);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        }
+      },
+      { rootMargin: "-30% 0px -55% 0px" }
+    );
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+  }, [nav]);
+
+  // Lock body scroll + handle Escape while drawer is open
+  useEffect(() => {
+    if (!drawerOpen) return;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setDrawerOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [drawerOpen]);
 
   const closeDrawer = () => setDrawerOpen(false);
 
@@ -32,6 +65,7 @@ export function Header({ currentSection = "home" }: HeaderProps) {
             className="drawer-toggle"
             onClick={() => setDrawerOpen(true)}
             aria-label="Open menu"
+            aria-expanded={drawerOpen}
           >
             <span className="drawer-toggle-bar"></span>
             <span className="drawer-toggle-bar"></span>
@@ -46,43 +80,23 @@ export function Header({ currentSection = "home" }: HeaderProps) {
           <p className="masthead-tagline">{brand.tagline}</p>
         </div>
 
-        <nav className="nav">
+        <nav className="nav" aria-label="Sections">
           <div className="nav-links">
-            <Link
-              href="#features"
-              className={`nav-link ${currentSection === "features" ? "active" : ""}`}
-            >
-              <span>Features</span>
-            </Link>
-            <Link
-              href="#playground"
-              className={`nav-link ${currentSection === "playground" ? "active" : ""}`}
-            >
-              <span>Manifest</span>
-            </Link>
-            <Link
-              href="#benchmarks"
-              className={`nav-link ${currentSection === "benchmarks" ? "active" : ""}`}
-            >
-              <span>Benchmarks</span>
-            </Link>
-            <Link
-              href="#architecture"
-              className={`nav-link ${currentSection === "architecture" ? "active" : ""}`}
-            >
-              <span>Architecture</span>
-            </Link>
-            <Link
-              href="#dispatches"
-              className={`nav-link ${currentSection === "dispatches" ? "active" : ""}`}
-            >
-              <span>Dispatches</span>
-            </Link>
+            {nav.map((item) => (
+              <a
+                key={item.id}
+                href={`#${item.id}`}
+                className={`nav-link ${activeSection === item.id ? "active" : ""}`}
+                aria-current={activeSection === item.id ? "true" : undefined}
+              >
+                <span>{item.label}</span>
+              </a>
+            ))}
             <a
               href={links.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="nav-link"
+              className="nav-link nav-link-github"
             >
               <i className="fab fa-github mr-1"></i>
               <span>GitHub</span>
@@ -96,10 +110,11 @@ export function Header({ currentSection = "home" }: HeaderProps) {
       <div
         className={`drawer-overlay ${drawerOpen ? "is-visible" : ""}`}
         onClick={closeDrawer}
+        aria-hidden="true"
       />
 
       {/* Mobile Drawer */}
-      <aside className={`drawer ${drawerOpen ? "is-open" : ""}`}>
+      <aside className={`drawer ${drawerOpen ? "is-open" : ""}`} aria-label="Sections">
         <div className="drawer-header">
           <Link href="/" className="drawer-brand" onClick={closeDrawer}>
             {brand.name}
@@ -115,26 +130,17 @@ export function Header({ currentSection = "home" }: HeaderProps) {
         </div>
 
         <nav className="drawer-nav">
-          <a href="#features" className="drawer-link" onClick={closeDrawer}>
-            <i className="fas fa-layer-group"></i>
-            <span>Features</span>
-          </a>
-          <a href="#playground" className="drawer-link" onClick={closeDrawer}>
-            <i className="fas fa-terminal"></i>
-            <span>Code Manifest</span>
-          </a>
-          <a href="#benchmarks" className="drawer-link" onClick={closeDrawer}>
-            <i className="fas fa-chart-line"></i>
-            <span>Benchmarks</span>
-          </a>
-          <a href="#architecture" className="drawer-link" onClick={closeDrawer}>
-            <i className="fas fa-sitemap"></i>
-            <span>Architecture</span>
-          </a>
-          <a href="#dispatches" className="drawer-link" onClick={closeDrawer}>
-            <i className="fas fa-newspaper"></i>
-            <span>Dispatches</span>
-          </a>
+          {nav.map((item) => (
+            <a
+              key={item.id}
+              href={`#${item.id}`}
+              className="drawer-link"
+              onClick={closeDrawer}
+            >
+              <i className="fas fa-arrow-right"></i>
+              <span>{item.label}</span>
+            </a>
+          ))}
           <a
             href={links.github}
             target="_blank"

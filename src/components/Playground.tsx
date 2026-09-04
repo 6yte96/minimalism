@@ -24,18 +24,11 @@ export function Playground() {
     <section id="playground" className="projects-section" style={{ paddingTop: "1rem" }}>
       <div className="section-header">
         <div className="section-header-left">
-          <div className="section-label-mono">Section III</div>
           <h2 className="section-title">{codePlayground.title}</h2>
           <p className="section-description">
-            Idiomatic bindings across multiple language runtimes with uniform
-            zero-copy semantics.
+            Real commands and real output. Every snippet below is the exact
+            format the project writes to disk.
           </p>
-        </div>
-
-        <div className="section-header-right label-mono">
-          Pp. 07 — 11
-          <br />
-          Runtime Spec
         </div>
       </div>
 

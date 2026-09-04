@@ -1,26 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { PROJECT_CONFIG } from "@/config";
 
 export function Hero() {
-  const { hero, install, telemetry } = PROJECT_CONFIG;
+  const { hero, install, telemetry, links } = PROJECT_CONFIG;
   const [selectedManager, setSelectedManager] = useState(
     install.defaultManager || "npm"
   );
   const [copied, setCopied] = useState(false);
-  const [currentDate, setCurrentDate] = useState("Thursday, September 3, 2026");
-
-  useEffect(() => {
-    setCurrentDate(
-      new Date().toLocaleDateString("en-US", {
-        weekday: "long",
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      })
-    );
-  }, []);
 
   const currentCommand =
     install.managers[selectedManager] || `npm install ${PROJECT_CONFIG.brand.name}`;
@@ -38,9 +26,6 @@ export function Hero() {
       <div className="hero-content">
         <div className="issue-line">
           <span className="issue-badge">{hero.issueBadge}</span>
-          <span>
-            {currentDate} &middot; {hero.edition}
-          </span>
         </div>
 
         <h1 className="hero-title">
@@ -132,6 +117,34 @@ export function Hero() {
           ))}
         </div>
         <div className="press-run-update">{telemetry.updatedText}</div>
+
+        {/* Quiet support icons: borderless until hover, same muted
+            register as the telemetry text. The labeled support card
+            lives at the bottom of the page. */}
+        {links.github && (
+          <div className="hero-quiet-support" role="group" aria-label="Support this project">
+            <a
+              href={links.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hero-support-icon"
+              title="Star on GitHub"
+              aria-label="Star on GitHub"
+            >
+              <i className="far fa-star"></i>
+            </a>
+            <a
+              href={`${links.github}/sponsorships`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hero-support-icon"
+              title="Sponsor"
+              aria-label="Sponsor"
+            >
+              <i className="fas fa-heart"></i>
+            </a>
+          </div>
+        )}
       </div>
     </section>
   );

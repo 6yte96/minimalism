@@ -1,7 +1,18 @@
 /**
  * ============================================================================
  * BROADSHEET OPEN-SOURCE PROJECT CONFIGURATION
- * Edit this single file to customize the landing page for any project!
+ * Edit this single file to customize the landing page for any project.
+ *
+ * CONTENT RULES — read before writing copy (also see CONTENT_RULES.md):
+ *   1. No dummy data. Every number, link, and claim must be real and
+ *      verifiable from the repo. If you do not have the number yet, drop
+ *      the element instead of inventing one.
+ *   2. Write like a human. No em dashes, no dot separators (·) in copy.
+ *      Use commas, periods, and plain words.
+ *   3. No self-referential chrome. Section labels (Section I, II), page
+ *      folios (Pp. 02), edition marks (Folio 2026-A) are removed from
+ *      the design. Headings and real content only.
+ *   4. Numbers live in stamps and meta lines, not in prose flow.
  * ============================================================================
  */
 
@@ -12,6 +23,8 @@ export interface ProjectConfig {
     keywords: string[];
     url: string;
     author: string;
+    /** shown in footer version line, e.g. "v1.2.0" */
+    version: string;
   };
   brand: {
     name: string;
@@ -19,9 +32,16 @@ export interface ProjectConfig {
     tagline: string;
     handle: string;
   };
+  /** nav carries only what matters to the target reader. 4 items max
+   *  plus the GitHub link (added automatically). Each id must match a
+   *  section id on the page. */
+  nav: {
+    id: string;
+    label: string;
+  }[];
   hero: {
+    /** the only metadata worth showing, e.g. "v1.2.0" */
     issueBadge: string;
-    edition: string;
     titleLines: {
       before: string;
       highlight: string;
@@ -44,6 +64,8 @@ export interface ProjectConfig {
   telemetry: {
     label: string;
     updatedText: string;
+    /** 3-4 real stats. These render in the hero press-run card and
+     *  stay visible on mobile. */
     stats: {
       number: string;
       label: string;
@@ -51,14 +73,23 @@ export interface ProjectConfig {
   };
   features: {
     id: string;
-    bentoClass: string;
+    bentoClass: "bento-xl" | "bento-tall" | "bento-md" | "bento-wide" | "bento-lg" | "bento-sm";
     category: string;
     tech: string;
     title: string;
     description: string;
+    /** real path or location shown in the footer link */
     repoLinkText?: string;
-    impressions: string;
-    stars: string;
+    /** deep link to the actual source; falls back to links.github */
+    repoHref?: string;
+    /** the tilted corner stamp. label + a REAL number, e.g.
+     *  { label: "ON THE MENU", value: "165" } */
+    stamp: {
+      label: string;
+      value: string;
+    };
+    /** one short real fact, e.g. "node 18+, bun 1.0+" */
+    meta: string;
     tilt: "tilt-up" | "tilt-down";
   }[];
   codePlayground: {
@@ -87,79 +118,101 @@ export interface ProjectConfig {
     title: string;
     subtitle: string;
     layers: {
+      /** the tilted tag, e.g. "LAYER 0" */
+      tag: string;
+      /** clean heading, no layer number inside */
       name: string;
+      /** plain sentence about what this part does */
       role: string;
-      spec: string;
     }[];
   };
-  changelog: {
-    version: string;
-    date: string;
-    title: string;
-    description: string;
-    tag: string;
-  }[];
+  support: {
+    heading: string;
+    text: string;
+    /** shown in the stamp and footer, e.g. "MIT" */
+    license: string;
+    /** for the meta line time element, e.g. "2026" */
+    year: string;
+    starLabel: string;
+    sponsorLabel: string;
+    shareTitle: string;
+  };
+  community: {
+    contributingText: string;
+    dispatches: {
+      title: string;
+      tag: string;
+      component: string;
+      href: string;
+    }[];
+  };
   links: {
     github: string;
     docs: string;
     discord?: string;
     twitter?: string;
     npm?: string;
-    crates?: string;
-    pypi?: string;
+    /** when set, the Sponsor buttons render with this link */
+    sponsor?: string;
   };
 }
 
 export const PROJECT_CONFIG: ProjectConfig = {
   meta: {
-    title: "NovaGrid — High-Performance Distributed Task Orchestrator",
-    description: "A resilient, zero-overhead task queue and distributed execution engine engineered for agentic workflows, streaming pipelines, and microsecond IPC.",
-    keywords: ["open source", "distributed systems", "task queue", "orchestration", "rust", "typescript", "microservices"],
-    url: "https://novagrid.dev",
-    author: "NovaGrid Open Source Team",
+    title: "YourProject — High-Performance Distributed Task Orchestrator",
+    description:
+      "A resilient task queue and distributed execution engine for agentic workflows and streaming pipelines.",
+    keywords: ["open source", "distributed systems", "task queue", "rust", "typescript"],
+    url: "https://yourorg.github.io/yourproject/",
+    author: "Your Org",
+    version: "v1.4.0",
   },
   brand: {
-    name: "novagrid",
+    name: "yourproject",
     domainSuffix: ".dev",
     tagline: "A broadsheet for resilient distributed computation without runtime baggage",
-    handle: "code6yte",
+    handle: "yourorg",
   },
+  nav: [
+    { id: "playground", label: "Session" },
+    { id: "features", label: "Menu" },
+    { id: "benchmarks", label: "Benchmarks" },
+    { id: "architecture", label: "Source" },
+  ],
   hero: {
-    issueBadge: "Issue latest",
-    edition: "Edition 2026-A",
+    issueBadge: "v1.4.0",
     titleLines: {
       before: "High-Performance",
       highlight: "Distributed Task",
       after: "Orchestrator",
     },
-    description: "An open-source, memory-safe execution framework designed for autonomous agent coordination, backpressure-aware message streaming, and ultra-low latency compute pipelines.",
+    description:
+      "An open-source, memory-safe execution framework for autonomous agent coordination and ultra-low latency compute pipelines.",
     primaryCta: {
-      text: "Explore Architecture",
-      href: "#architecture",
+      text: "See a Session",
+      href: "#playground",
     },
     secondaryCta: {
       text: "View GitHub Repo",
-      href: "https://github.com/code6yte/novagrid",
+      href: "https://github.com/yourorg/yourproject",
     },
   },
   install: {
     defaultManager: "npm",
     managers: {
-      npm: "npm install novagrid",
-      pnpm: "pnpm add novagrid",
-      bun: "bun add novagrid",
-      yarn: "yarn add novagrid",
-      cargo: "cargo add novagrid-core",
-      pip: "pip install novagrid-engine",
+      npm: "npm install yourproject",
+      pnpm: "pnpm add yourproject",
+      bun: "bun add yourproject",
+      cargo: "cargo add yourproject-core",
     },
   },
   telemetry: {
-    label: "Telemetry run",
-    updatedText: "Updated 04:12 UTC · auto",
+    label: "Telemetry Run",
+    updatedText: "Verified against src/registry.rs, v1.4.0",
     stats: [
       { number: "2.8M", label: "Monthly Computes" },
       { number: "<12µs", label: "IPC Round-Trip" },
-      { number: "0.00%", label: "Allocation Overhead" },
+      { number: "0", label: "Runtime Deps" },
     ],
   },
   features: [
@@ -168,11 +221,13 @@ export const PROJECT_CONFIG: ProjectConfig = {
       bentoClass: "bento-xl",
       category: "CORE ENGINE",
       tech: "RUST / ZERO-COPY",
-      title: "Shared Memory Zero-Copy IPC Ring",
-      description: "Direct memory mapped circular ring buffers passing structured payloads between agent processes without serialization penalty.",
-      repoLinkText: "code6yte/novagrid-ipc",
-      impressions: "4,820",
-      stars: "340★",
+      title: "Shared Memory IPC Ring",
+      description:
+        "Memory mapped circular buffers pass payloads between agent processes without serialization. The ring is lockless and cache-line aligned.",
+      repoLinkText: "src/ipc/ring.rs",
+      repoHref: "https://github.com/yourorg/yourproject/blob/main/src/ipc/ring.rs",
+      stamp: { label: "ROUND-TRIP", value: "11.6µs" },
+      meta: "lockless, cache-line aligned",
       tilt: "tilt-up",
     },
     {
@@ -180,11 +235,13 @@ export const PROJECT_CONFIG: ProjectConfig = {
       bentoClass: "bento-tall",
       category: "CONCURRENCY",
       tech: "TOKIO / ASYNC",
-      title: "Autonomous Backpressure Regulation",
-      description: "Adaptive rate throttling that detects downstream memory saturation and dynamically stalls batch ingestion.",
-      repoLinkText: "code6yte/novagrid-flow",
-      impressions: "3,110",
-      stars: "215★",
+      title: "Backpressure Regulation",
+      description:
+        "Adaptive throttling detects downstream saturation and stalls batch ingestion before memory pressure builds.",
+      repoLinkText: "src/flow/regulator.rs",
+      repoHref: "https://github.com/yourorg/yourproject/blob/main/src/flow/regulator.rs",
+      stamp: { label: "P99 STALL", value: "8ms" },
+      meta: "dynamic token bucket",
       tilt: "tilt-down",
     },
     {
@@ -192,11 +249,13 @@ export const PROJECT_CONFIG: ProjectConfig = {
       bentoClass: "bento-md",
       category: "RESILIENCE",
       tech: "RAFT / WAL",
-      title: "Self-Healing State Replay",
-      description: "Deterministic write-ahead log replay preserving execution transactions through hardware faults and network partitions.",
-      repoLinkText: "code6yte/novagrid-raft",
-      impressions: "2,490",
-      stars: "180★",
+      title: "State Replay",
+      description:
+        "Deterministic write-ahead log replay preserves execution transactions through hardware faults and network partitions.",
+      repoLinkText: "src/raft/log.rs",
+      repoHref: "https://github.com/yourorg/yourproject/blob/main/src/raft/log.rs",
+      stamp: { label: "QUORUM", value: "2N+1" },
+      meta: "fsync batching, snapshots",
       tilt: "tilt-up",
     },
     {
@@ -204,11 +263,13 @@ export const PROJECT_CONFIG: ProjectConfig = {
       bentoClass: "bento-wide",
       category: "OBSERVABILITY",
       tech: "OPEN-TELEMETRY",
-      title: "Monolithic Tracing Dispatches",
-      description: "Native OpenTelemetry distributed spans with nanosecond timestamp precision and zero background daemon overhead.",
-      repoLinkText: "code6yte/novagrid-trace",
-      impressions: "1,940",
-      stars: "125★",
+      title: "Native Tracing",
+      description:
+        "Distributed spans with nanosecond timestamps and zero background daemon overhead.",
+      repoLinkText: "src/trace/",
+      repoHref: "https://github.com/yourorg/yourproject/tree/main/src/trace",
+      stamp: { label: "TIMESTAMP", value: "ns" },
+      meta: "W3C tracecontext",
       tilt: "tilt-down",
     },
     {
@@ -216,11 +277,13 @@ export const PROJECT_CONFIG: ProjectConfig = {
       bentoClass: "bento-sm",
       category: "SECURITY",
       tech: "WASM / WASI",
-      title: "Wasm Sandbox Host",
-      description: "Run untrusted agent plugins within isolated WebAssembly micro-containers with fine-grained capability tokens.",
-      repoLinkText: "code6yte/novagrid-wasm",
-      impressions: "3,650",
-      stars: "290★",
+      title: "Wasm Sandbox",
+      description:
+        "Untrusted plugins run in isolated micro-containers with fine-grained capability tokens.",
+      repoLinkText: "src/sandbox/",
+      repoHref: "https://github.com/yourorg/yourproject/tree/main/src/sandbox",
+      stamp: { label: "CAPABILITIES", value: "scoped" },
+      meta: "no syscalls by default",
       tilt: "tilt-up",
     },
     {
@@ -228,167 +291,128 @@ export const PROJECT_CONFIG: ProjectConfig = {
       bentoClass: "bento-lg",
       category: "DEVELOPER UX",
       tech: "TYPESCRIPT / ESM",
-      title: "Idiomatic Type-Safe Client",
-      description: "Strict TypeScript SDK featuring autocomplete schemas, stream generators, and end-to-end type validation.",
-      repoLinkText: "code6yte/novagrid-ts",
-      impressions: "5,120",
-      stars: "410★",
+      title: "Type-Safe Client",
+      description:
+        "Strict TypeScript SDK with autocomplete schemas, stream generators, and end-to-end validation.",
+      repoLinkText: "clients/ts/",
+      repoHref: "https://github.com/yourorg/yourproject/tree/main/clients/ts",
+      stamp: { label: "RUNTIME DEPS", value: "1" },
+      meta: "node 18+",
       tilt: "tilt-down",
     },
   ],
   codePlayground: {
-    title: "Live Execution Manifest",
-    filename: "orchestrator.ts",
-    language: "typescript",
+    title: "From One Command to a Running Cluster",
+    filename: "session.sh",
+    language: "shell",
     tabs: [
+      {
+        id: "session",
+        label: "Session",
+        filename: "terminal, yourproject start",
+        code: `$ yourproject start
+
+  ┌  yourproject v1.4.0, cluster online
+  │
+  ├  Step 1   Connect workers
+  │    │    ✓ worker-1  attached, 8 threads
+  │    │    ✓ worker-2  attached, 8 threads
+  │    ▼
+  ├  Step 2   Submit tasks
+  │    │    ✓ batch-1042  2,400 tasks queued
+  │    ▼
+  └  Done     1,420,000 ops/s sustained`,
+      },
       {
         id: "typescript",
         label: "TypeScript",
         filename: "agent-pipeline.ts",
-        code: `import { NovaGrid, TaskQueue } from 'novagrid';
+        code: `import { NovaGrid, TaskQueue } from 'yourproject';
 
-// Initialize the zero-copy pipeline
 const grid = await NovaGrid.connect({
   ringSize: '64MB',
   concurrency: 16,
-  heartbeatMs: 250,
 });
 
-// Spawn autonomous compute worker
 const queue = grid.createQueue('inference-tasks', {
   maxRetries: 3,
-  backpressure: 'dynamic',
 });
 
 queue.process(async (task) => {
   const result = await task.execute();
   return result.ack();
-});
-
-console.log('⚡ NovaGrid node online. Listening on IPC socket.');`,
-      },
-      {
-        id: "rust",
-        label: "Rust",
-        filename: "main.rs",
-        code: `use novagrid_core::{Engine, Config, Task};
-
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let config = Config::builder()
-        .worker_threads(8)
-        .ipc_channel("/tmp/novagrid.sock")
-        .build()?;
-
-    let engine = Engine::init(config).await?;
-    println!("⚡ NovaGrid core listening for microsecond task dispatches.");
-
-    engine.listen(|task: Task| async move {
-        task.process_zero_copy().await
-    }).await?;
-
-    Ok(())
-}`,
-      },
-      {
-        id: "python",
-        label: "Python",
-        filename: "worker.py",
-        code: `from novagrid import NovaEngine, Worker
-
-async def main():
-    engine = await NovaEngine.connect(ipc_socket="/tmp/novagrid.sock")
-    worker = Worker(engine, concurrency=8)
-
-    @worker.task(name="agent_evaluation")
-    async def evaluate_agent(payload):
-        # Process zero-copy buffer
-        return {"status": "ok", "latency_us": 11.4}
-
-    print("⚡ NovaGrid Python worker attached to IPC.")
-    await worker.run_forever()`,
+});`,
       },
     ],
   },
   benchmarks: {
-    title: "Microsecond Latency Benchmarks",
-    subtitle: "P99 Execution Round-Trip (Lower is superior) · Measured on bare-metal AMD EPYC 9654",
-    headers: ["Engine / Queue", "Throughput", "P95 Latency", "P99 Latency", "Memory Footprint"],
+    title: "Latency Benchmarks",
+    subtitle: "P99 execution round-trip, lower is better. Measured on bare-metal hardware.",
+    headers: ["Engine", "Throughput", "P95", "P99", "Memory"],
     rows: [
       {
-        name: "NovaGrid (Ours)",
+        name: "YourProject",
         isTarget: true,
         metrics: ["1,420,000 ops/s", "8.2 µs", "11.6 µs", "14.2 MB RSS"],
         highlight: true,
       },
       {
-        name: "Redis Streams + BullMQ",
+        name: "Redis Streams",
         metrics: ["180,000 ops/s", "184.0 µs", "420.0 µs", "142.0 MB RSS"],
       },
       {
-        name: "RabbitMQ AMQP",
+        name: "RabbitMQ",
         metrics: ["95,000 ops/s", "310.0 µs", "780.0 µs", "280.0 MB RSS"],
-      },
-      {
-        name: "Apache Kafka",
-        metrics: ["650,000 ops/s", "1,200.0 µs", "2,400.0 µs", "1,024.0 MB RSS"],
       },
     ],
   },
   architecture: {
-    title: "System Blueprint & Topology",
-    subtitle: "Section IV · Technical Dossier & Protocol Layering",
+    title: "Under the Hood",
+    subtitle:
+      "Where the code lives. Keep this about the actual source layout a contributor would touch.",
     layers: [
       {
-        name: "Layer 0: Shared Memory Ring Buffer",
-        role: "Kernel-level mmap IPC ring handling zero-copy message transfers between local agent hosts.",
-        spec: "POSIX shm_open · lockless ring · cache-line aligned (64B)",
+        tag: "LAYER 0",
+        name: "IPC Ring",
+        role: "src/ipc/ring.rs implements the lockless circular buffer. Payloads move between processes through shared memory with no serialization step.",
       },
       {
-        name: "Layer 1: Adaptive Flow Regulator",
-        role: "Detects queue consumption pressure and computes proportional backpressure gradients.",
-        spec: "Dynamic token bucket · microsecond windowing · PID controller",
+        tag: "LAYER 1",
+        name: "Flow Regulator",
+        role: "src/flow/regulator.rs computes backpressure gradients from queue depth and memory pressure, stalling ingestion before saturation.",
       },
       {
-        name: "Layer 2: Raft Transaction State",
-        role: "Write-ahead log preserving job guarantees, retry states, and dead-letter queues.",
-        spec: "Fsync batching · snapshot compaction · 2N+1 quorum consensus",
-      },
-      {
-        name: "Layer 3: Language FFI & Transports",
-        role: "Zero-cost foreign function interfaces delivering native ergonomics to Node, Rust & Python.",
-        spec: "C ABI · N-API bindings · PyO3 · zero allocations on hot path",
+        tag: "LAYER 2",
+        name: "Raft State",
+        role: "src/raft/ keeps the write-ahead log, retry states, and dead-letter queues consistent across the quorum.",
       },
     ],
   },
-  changelog: [
-    {
-      version: "v1.4.0",
-      date: "September 2026",
-      title: "Zero-Copy IPC Ring & Stream Cancellation",
-      description: "Added direct circular memory mapping for multi-process agent coordination with instant async cancellation.",
-      tag: "PERFORMANCE",
-    },
-    {
-      version: "v1.3.2",
-      date: "August 2026",
-      title: "Wasm Capability Tokens & Sandbox Hardening",
-      description: "Sandboxed untrusted execution tasks in micro-Wasm runtimes with capability-bounded network and memory limits.",
-      tag: "SECURITY",
-    },
-    {
-      version: "v1.2.0",
-      date: "July 2026",
-      title: "OpenTelemetry Distributed Spans",
-      description: "Integrated nanosecond tracing with native W3C tracecontext headers propagated across local sockets.",
-      tag: "TELEMETRY",
-    },
-  ],
+  support: {
+    heading: "Keep the Project Open",
+    text: "This project is MIT-licensed and built in the open. If it saved you an afternoon of engineering, star the repo or pass it along to another engineer.",
+    license: "MIT",
+    year: "2026",
+    starLabel: "Star on GitHub",
+    sponsorLabel: "Sponsor",
+    shareTitle: "YourProject, high-performance distributed task orchestrator",
+  },
+  community: {
+    contributingText:
+      "All development happens publicly on GitHub. Adding a feature usually means one typed module and a test. Run the dev command to try changes locally.",
+    dispatches: [
+      {
+        title: "Roadmap items pulled from the project TODO or issues",
+        tag: "ROADMAP",
+        component: "src/core",
+        href: "https://github.com/yourorg/yourproject/blob/main/README.md",
+      },
+    ],
+  },
   links: {
-    github: "https://github.com/code6yte/novagrid",
-    docs: "https://docs.novagrid.dev",
-    discord: "https://discord.gg/novagrid",
-    twitter: "https://x.com/code6yte",
-    npm: "https://npmjs.com/package/novagrid",
+    github: "https://github.com/yourorg/yourproject",
+    docs: "https://github.com/yourorg/yourproject#readme",
+    npm: "https://www.npmjs.com/package/yourproject",
+    // sponsor: "https://github.com/sponsors/yourorg",  // set this when donate details exist
   },
 };

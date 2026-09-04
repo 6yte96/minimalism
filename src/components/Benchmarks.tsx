@@ -7,15 +7,8 @@ export function Benchmarks() {
     <section id="benchmarks" className="projects-section" style={{ paddingTop: "1rem" }}>
       <div className="section-header">
         <div className="section-header-left">
-          <div className="section-label-mono">Section IV</div>
           <h2 className="section-title">{benchmarks.title}</h2>
           <p className="section-description">{benchmarks.subtitle}</p>
-        </div>
-
-        <div className="section-header-right label-mono">
-          Pp. 12 — 15
-          <br />
-          Telemetry Run
         </div>
       </div>
 
@@ -61,11 +54,11 @@ export function Benchmarks() {
         className="font-mono text-xs text-muted-foreground"
       >
         <span>
-          METHODOLOGY // 1,000,000 randomized payloads (512B each) under sustained concurrent load.
+          METHODOLOGY // quotas transcribed verbatim from the freeTier field of src/providers.ts
         </span>
         <span className="telemetry-pill">
           <span style={{ color: "#10b981" }}>●</span>
-          <span>Verified Deterministic</span>
+          <span>Registry Verified</span>
         </span>
       </div>
     </section>
